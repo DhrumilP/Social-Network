@@ -311,9 +311,11 @@ router.get('/github/:username', async (req, res) => {
       Authorization: `token ${config.get('githubSecret')}`,
     };
 
-    console.log(headers);
-
-    const gitHubResponse = await axios.get(uri, { headers });
+    const gitHubResponse = await axios
+      .get(uri, { headers })
+      .catch(function (error) {
+        return res.status(404).json({ msg: error.message });
+      });
     return res.json(gitHubResponse.data);
   } catch (err) {
     console.log(err.message);
